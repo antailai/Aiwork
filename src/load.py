@@ -6,7 +6,7 @@ import json
 import os
 from xpinyin import Pinyin
 
-wd = []  # word_list
+wd = dict()  # word_list
 
 
 class word:
@@ -48,19 +48,13 @@ def load_hanzi_list(hanzi_path):
     for line in file.readlines():
         for each_word in line:
             p = Pinyin()
-            tmp_word = each_word
-            tmp_pinyin = p.get_pinyin(tmp_word)
-            tmp_next_data = dict()
-            tmp_count = 0
-            word1 = word(tmp_word, tmp_count, tmp_pinyin, tmp_next_data)
-            wd.append(word1)
+            next_dict = dict()
+            tmp_word = {'word': each_word, 'pinyin': p.get_pinyin(
+                each_word), 'count': 0, 'next_dict': next_dict}
+            wd[each_word] = tmp_word
 
 
 # if __name__ == '__main__':
-#     load_hanzi_list(
-#         "D:\cloud\Seafile\project\python\AIwork-pinyin\lib\一二级汉字表.txt")
-#     for item in wd:
-#         print(item.word, end=' ')
-#         print(item.count, end=' ')
-#         print(item.pinyin, end=' ')
-#         print(item.next_data)
+#     load_hanzi_list("../lib/一二级汉字表.txt")
+#     for key in wd:
+#         print(key, wd[key])
