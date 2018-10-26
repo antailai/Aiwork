@@ -49,8 +49,12 @@ def load_hanzi_list(hanzi_path):
         for each_word in line:
             p = Pinyin()
             next_dict = dict()
-            tmp_word = {'word': each_word, 'pinyin': p.get_pinyin(
-                each_word), 'count': 0, 'next_dict': next_dict}
+            tmp_word = {
+                'word': each_word,
+                'pinyin': p.get_pinyin(each_word),
+                'count': 0,
+                'next_dict': next_dict
+            }
             wd[each_word] = tmp_word
 
 

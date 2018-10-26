@@ -11,7 +11,7 @@ def train(data_set_path):
     for i in range(0, 1):
         text[i] = re.sub(r'[^\u4e00-\u9fa5]', '', text[i])
         for o in range(len(text[i])):
-            if o != len(text[i])-1:
+            if o != len(text[i]) - 1:
                 tmp_word = text[i][o]
                 next_word = text[i][o + 1]
                 load.wd[tmp_word]['count'] += 1
