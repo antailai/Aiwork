@@ -5,16 +5,9 @@
 import json
 import os
 from xpinyin import Pinyin
+from pypinyin import lazy_pinyin, Style
 
 wd = dict()  # word_list
-
-
-class word:
-    def __init__(self, word, count, pinyin, next_data):
-        self.word = word
-        self.count = count
-        self.pinyin = pinyin
-        self.next_data = next_data
 
 
 def resolve_json(path, text, title, time, url):
@@ -44,21 +37,31 @@ def load_dir(path):
 
 
 def load_hanzi_list(hanzi_path):
+    p = Pinyin()
     file = open(hanzi_path)
     for line in file.readlines():
         for each_word in line:
-            p = Pinyin()
             next_dict = dict()
             tmp_word = {
-                'word': each_word,
-                'pinyin': p.get_pinyin(each_word),
-                'count': 0,
-                'next_dict': next_dict
+                'word':
+                each_word,
+                'pinyin':
+                'lue' if p.get_pinyin(each_word) == 'lve' else
+                p.get_pinyin(each_word),
+                'count':
+                0,
+                'next_dict':
+                next_dict
             }
             wd[each_word] = tmp_word
 
 
-# if __name__ == '__main__':
-#     load_hanzi_list("../lib/一二级汉字表.txt")
-#     for key in wd:
-#         print(key, wd[key])
+if __name__ == '__main__':
+    # load_hanzi_list("../lib/一二级汉字表.txt")
+    # for key in wd:
+    #     print(key, wd[key])
+    # pinyin = 'lue' if (lazy_pinyin('安') == (['lve']
+    #                                         or ['nve'])) else lazy_pinyin('安')
+    p = Pinyin()
+    print('lue' if p.get_pinyin('艹') == 'lve' else p.get_pinyin('艹'))
+    print(lazy_pinyin('嗯', style=Style.NORMAL))

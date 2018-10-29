@@ -4,35 +4,21 @@
 '''
 import re
 
-py = list()
-
-
-class spell:
-    def __init__(self, pinyin, word):
-        self.pinyin = pinyin
-        self.word = word
-
-    def pinyin2word(self):
-        return self.word
-
-    def display(self):
-        print(self.pinyin)
-        print(self.word)
+py = dict()
 
 
 def proccess_transfer_list(pinyin2hanzi_path):
     pinyin2hanzi = open(pinyin2hanzi_path)
-    hanzi = open("../lib/一二级汉字表.txt").read()
+    hanzi = open("D://project/Aiwork/lib/一二级汉字表.txt").read()
     for line in pinyin2hanzi.readlines():
         line = re.sub('\n', '', line)
         tmp = line.split(" ")
         tmp_pinyin = tmp[0]
-        tmp_word = []
+        tmp_dict = dict()
         for i in range(1, len(tmp)):
             if tmp[i] in hanzi:
-                tmp_word.append(tmp[i])
-        tmp_py = spell(tmp_pinyin, tmp_word)
-        py.append(tmp_py)
+                tmp_dict.setdefault(tmp[i], 0)
+        py.setdefault(tmp_pinyin, tmp_dict)
     return py
 
 
@@ -40,12 +26,13 @@ def transfer(input_path):
     input = open(input_path)  # open the input.txt
     tmp_sentence = []
     for line in input.readlines():
+        line = re.sub('\n', '', line)
         tmp = line.split(" ")  # 将每个拼音分开写进list
         for item in tmp:  # 处理每个拼音
-            for tmp_spell in py:
-                if tmp_spell.pinyin == item:
-                    # 查找拼音对应的对象
-                    tmp_sentence.append(tmp_spell.pinyin2word())
+            tmp_list = list()
+            for key in py[item]:
+                tmp_list.append(key)
+            tmp_sentence.append(tmp_list)
     return tmp_sentence
 
 

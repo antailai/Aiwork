@@ -16,10 +16,8 @@ def train(data_set_path):
                 next_word = text[i][o + 1]
                 if tmp_word in load.wd:
                     load.wd[tmp_word]['count'] += 1
-                    if next_word in load.wd[tmp_word]['next_dict']:
-                        load.wd[tmp_word]['next_dict'][next_word] += 1
-                    else:
-                        load.wd[tmp_word]['next_dict'][next_word] = 1
+                    load.wd[tmp_word]['next_dict'].setdefault(next_word, 0)
+                    load.wd[tmp_word]['next_dict'][next_word] += 1
                 else:
                     continue
             else:
