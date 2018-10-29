@@ -62,6 +62,6 @@ if __name__ == '__main__':
     #     print(key, wd[key])
     # pinyin = 'lue' if (lazy_pinyin('∞≤') == (['lve']
     #                                         or ['nve'])) else lazy_pinyin('∞≤')
-    p = Pinyin()
-    print('lue' if p.get_pinyin('‹≥') == 'lve' else p.get_pinyin('‹≥'))
-    print(lazy_pinyin('‡≈', style=Style.NORMAL))
+    # p = Pinyin()
+    # print('lue' if p.get_pinyin('‹≥') == 'lve' else p.get_pinyin('‹≥'))
+    # print(lazy_pinyin('‡≈', style=Style.NORMAL))
