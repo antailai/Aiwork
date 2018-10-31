@@ -4,12 +4,19 @@
 '''
 import load
 import re
+# import jieba
 
+
+# def cut(s):
+#     return jieba.cut(s, cut_all=False)
+    
 
 def train(data_set_path):
+    # 待改变思路，每个句子不直接处理，用jieba先分词，将分好的词直接转换为pinyin，不用wd这个dict，把所有的数据都存在pinyin里面。
     text = load.load_dir(data_set_path)
     for i in range(len(text)):
         text[i] = re.sub(r'[^\u4e00-\u9fa5]', '', text[i])
+        # cut(text[i])
         for o in range(len(text[i])):
             if o != len(text[i]) - 1:
                 tmp_word = text[i][o]

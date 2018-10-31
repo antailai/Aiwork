@@ -1,8 +1,8 @@
 # coding:gbk
 
 import train
-import transfer
 import load
+import re
 
 
 def init_emission():
@@ -10,13 +10,15 @@ def init_emission():
     # wd[清] = {'word'= 清 'pinyin' = qing 'count' = 0 'next_dict' = {'华' = 10 '白' =5}}
     # py [qing] = (黥请顷庆倾檠轻氢卿磬罄鲭擎謦綮氰晴蜻圊清情箐苘亲青)
     for key in load.wd:
-        transfer.py[load.wd[key]['pinyin']][key] = load.wd[key]['count']
-    for key in transfer.py:
+        load.py[load.wd[key]['pinyin']][key] = load.wd[key]['count']
+    for key in load.py:
         sum = 0
-        for word in transfer.py[key]:
-            sum += transfer.py[key][word]
-        for word in transfer.py[key]:
-            transfer.py[key][word] /= sum
+        for word in load.py[key]:
+            sum += load.py[key][word]
+        if sum == 0:
+            continue
+        for word in load.py[key]:
+            load.py[key][word] /= sum
 
 
 def init_tramsition():
@@ -29,11 +31,27 @@ def init_tramsition():
             load.wd[key]['next_dict'][word] /= sum
 
 
+def transfer(input_path):
+    input = open(input_path)  # open the input.txt
+    tmp_sentence = []
+    for line in input.readlines():
+        line = re.sub('\n', '', line)
+        tmp = line.split(" ")  # 将每个拼音分开写进list
+        for item in tmp:  # 处理每个拼音
+            tmp_list = list()
+            for key in load.py[item]:
+                tmp_list.append(key)
+            tmp_sentence.append(tmp_list)
+    return tmp_sentence
+
+
 if __name__ == '__main__':
     load.load_hanzi_list("D://project//Aiwork/lib/一二级汉字表.txt")
     train.train("D://project/Aiwork/data_set/2016-10.txt")
-    transfer.proccess_transfer_list("D://project/Aiwork/lib/拼音汉字表.txt")
+    load.load_pyhz_list("D://project/Aiwork/lib/拼音汉字表.txt")
     init_emission()
-    for key in transfer.py:
-        for word in transfer.py[key]:
-            print(key, transfer.py[key][word])
+    init_tramsition()
+
+    # for key in transfer.py:
+    #     for word in transfer.py[key]:
+    #         print(word, transfer.py[key][word])
