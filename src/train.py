@@ -4,12 +4,12 @@
 '''
 import load
 import re
-# import jieba
 
+# import jieba
 
 # def cut(s):
 #     return jieba.cut(s, cut_all=False)
-    
+
 
 def train(data_set_path):
     # 待改变思路，每个句子不直接处理，用jieba先分词，将分好的词直接转换为pinyin，不用wd这个dict，把所有的数据都存在pinyin里面。
