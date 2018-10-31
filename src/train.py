@@ -1,43 +1,68 @@
-# coding:gbk
+# coding:utf-8
 '''
-  ÓïÁÏ¿âÖĞ¶ÁÈ¡µ½µÄÕıÎÄ½øĞĞÑµÁ·
+  è¯­æ–™åº“ä¸­è¯»å–åˆ°çš„æ­£æ–‡è¿›è¡Œè®­ç»ƒ
 '''
 import load
 import re
+import jieba
+# import pypinyin
+import ChineseTone
+import sys
 
-# import jieba
 
-# def cut(s):
-#     return jieba.cut(s, cut_all=False)
+def cut(s):
+    return jieba.cut(s, cut_all=False)
+
+
+# def isChinese(s):
+#     for each_char in s:
+#         if '\u4e00' <= each_char <= '\u9fff':
+#             return True
+#         return False
 
 
 def train(data_set_path):
-    # ´ı¸Ä±äË¼Â·£¬Ã¿¸ö¾ä×Ó²»Ö±½Ó´¦Àí£¬ÓÃjiebaÏÈ·Ö´Ê£¬½«·ÖºÃµÄ´ÊÖ±½Ó×ª»»Îªpinyin£¬²»ÓÃwdÕâ¸ödict£¬°ÑËùÓĞµÄÊı¾İ¶¼´æÔÚpinyinÀïÃæ¡£
+    # å¾…æ”¹å˜æ€è·¯ï¼Œæ¯ä¸ªå¥å­ä¸ç›´æ¥å¤„ç†ï¼Œç”¨jiebaå…ˆåˆ†è¯ï¼Œå°†åˆ†å¥½çš„è¯ç›´æ¥è½¬æ¢ä¸ºpinyinï¼Œä¸ç”¨wdè¿™ä¸ªdictï¼ŒæŠŠæ‰€æœ‰çš„æ•°æ®éƒ½å­˜åœ¨pinyiné‡Œé¢ã€‚
     text = load.load_dir(data_set_path)
-    for i in range(len(text)):
+    for i in range(1):
+        tmp_pinyin = []
         text[i] = re.sub(r'[^\u4e00-\u9fa5]', '', text[i])
-        # cut(text[i])
-        for o in range(len(text[i])):
-            if o != len(text[i]) - 1:
-                tmp_word = text[i][o]
-                next_word = text[i][o + 1]
-                if tmp_word in load.wd:
-                    load.wd[tmp_word]['count'] += 1
-                    load.wd[tmp_word]['next_dict'].setdefault(next_word, 0)
-                    load.wd[tmp_word]['next_dict'][next_word] += 1
+        for item in cut(text[i]):
+            tmp_pinyin.append(
+                pypinyin.pinyin(
+                    item, style=pypinyin.Style.NORMAL, errors='ignore'))
+        for item in tmp_pinyin:
+            for i in range(len(item)):
+                if len(item[i]) == 1:
+                    item[i] = ''.join(item[i])
                 else:
-                    continue
-            else:
-                tmp_word = text[i][o]
-                if tmp_word in load.wd:
-                    load.wd[tmp_word]['count'] += 1
-                else:
-                    continue
+                    for o in range(1, len(item[i])):
+                        item[i][0] += item[i][o]
+                    item[i] = ''.join(item[i][0])
+            # print(item)
+        # print(tmp_pinyin)
+        # for o in range(len(text[i])):
+        #     if o != len(text[i]) - 1:
+        #         tmp_word = text[i][o]
+        #         next_word = text[i][o + 1]
+        #         if tmp_word in load.wd:
+        #             load.wd[tmp_word]['count'] += 1
+        #             load.wd[tmp_word]['next_dict'].setdefault(next_word, 0)
+        #             load.wd[tmp_word]['next_dict'][next_word] += 1
+        #         else:
+        #             continue
+        #     else:
+        #         tmp_word = text[i][o]
+        #         if tmp_word in load.wd:
+        #             load.wd[tmp_word]['count'] += 1
+        #         else:
+        #             continue
 
 
-# if __name__ == '__main__':
-#     load.load_hanzi_list("../lib/Ò»¶ş¼¶ºº×Ö±í.txt")
-#     train("../data_set/2016-10.txt")
-#     for key in load.wd:
-#         if load.wd[key]['count'] != 0:
-#             print(key, load.wd[key])
+if __name__ == '__main__':
+    import sys
+    # load.load_hanzi_list("../lib/ä¸€äºŒçº§æ±‰å­—è¡¨.txt")
+    train("../data_set/2016-10.txt")
+    # for key in load.wd:
+    #     if load.wd[key]['count'] != 0:
+    #         print(key, load.wd[key])

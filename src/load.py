@@ -31,7 +31,7 @@ def load_pyhz_list(pinyin2hanzi_path):
 
 
 def load_dataset(path, text, title, time, url):
-    f = open(path, "r")
+    f = open(path, "r", 'gbk')
     for line in f.readlines():
         filejson = json.loads(line)
         text.append(filejson['html'])
