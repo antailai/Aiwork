@@ -5,9 +5,7 @@
 import load
 import re
 import jieba
-# import pypinyin
-import ChineseTone
-import sys
+import pypinyin
 
 
 def cut(s):
@@ -39,8 +37,6 @@ def train(data_set_path):
                     for o in range(1, len(item[i])):
                         item[i][0] += item[i][o]
                     item[i] = ''.join(item[i][0])
-            # print(item)
-        # print(tmp_pinyin)
         # for o in range(len(text[i])):
         #     if o != len(text[i]) - 1:
         #         tmp_word = text[i][o]
@@ -60,7 +56,6 @@ def train(data_set_path):
 
 
 if __name__ == '__main__':
-    import sys
     # load.load_hanzi_list("../lib/一二级汉字表.txt")
     train("../data_set/2016-10.txt")
     # for key in load.wd:
