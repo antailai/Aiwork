@@ -20,7 +20,7 @@ def load_pyhz_list(pinyin2hanzi_path):
         tmp_dict = dict()
         for i in range(1, len(tmp)):
             if tmp[i] in hanzi:
-                tmp_dict.setdefault(tmp[i], 0)
+                tmp_dict.setdefault(tmp[i], {'start': 0, 'count': 0})
         py.setdefault(tmp_pinyin, tmp_dict)
     return py
 
@@ -31,7 +31,7 @@ def load_pyhz_list(pinyin2hanzi_path):
 
 
 def load_dataset(path, text, title, time, url):
-    f = open(path, "r", 'gbk')
+    f = open(path, "r")
     for line in f.readlines():
         filejson = json.loads(line)
         text.append(filejson['html'])
@@ -74,6 +74,7 @@ def load_hanzi_list(hanzi_path):
                     'word': each_word,
                     'pinyin': 'en',
                     'count': 0,
+                    'start_count': 0,
                     'next_dict': {}
                 }
             elif each_word == 'เว':
@@ -81,6 +82,7 @@ def load_hanzi_list(hanzi_path):
                     'word': each_word,
                     'pinyin': 'dia',
                     'count': 0,
+                    'start_count': 0,
                     'next_dict': {}
                 }
             else:
@@ -88,6 +90,11 @@ def load_hanzi_list(hanzi_path):
                     'word': each_word,
                     'pinyin': resolve_pinyin,
                     'count': 0,
+                    'start_count': 0,
                     'next_dict': {}
                 }
             wd[each_word] = tmp_word
+
+
+# if __name__ == '__main__':
+#     load_dir("D:/project/Aiwork/data_set")

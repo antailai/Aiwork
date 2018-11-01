@@ -1,55 +1,85 @@
 # coding:gbk
 
-import train
-import load
+from train import train
+from load import load_hanzi_list, load_pyhz_list, py, wd
 import re
 
 
-def init_emission():
-    # qing->清：10 请：2 (for example) qing -> 清：10/12 请：2/12
-    # wd[清] = {'word'= 清 'pinyin' = qing 'count' = 0 'next_dict' = {'华' = 10 '白' =5}}
-    # py [qing] = {'清' = 10 '青' =5}
-    for key in load.wd:
-        load.py[load.wd[key]['pinyin']][key] = load.wd[key]['count']
-    for key in load.py:
+class State:
+    def __init__(self, sentence, probability):
+        self.sentence = sentence
+        self.probability = probability
+
+    def update_state(self, next_word):
+        self.sentence.append(next_word)
+        self.probability = self.probability * wd[self.sentence[
+            len(self.sentence) - 1]]['next_dict'][next_word]
+
+
+def init_start():
+    for key in wd:
+        py[wd[key]['pinyin']][key]['start'] = wd[key]['start_count']
+    for key in py:
         sum = 0
-        for word in load.py[key]:
-            sum += load.py[key][word]
+        for word in py[key]:
+            sum += py[key][word]['start']
         if sum == 0:
             continue
-        for word in load.py[key]:
-            load.py[key][word] /= sum
+        for word in py[key]:
+            py[key][word]['start'] /= sum
+
+
+def init_emission():
+    for key in wd:
+        py[wd[key]['pinyin']][key]['count'] = wd[key]['count']
+    for key in py:
+        sum = 0
+        for word in py[key]:
+            sum += py[key][word]['count']
+        if sum == 0:
+            continue
+        for word in py[key]:
+            py[key][word]['count'] /= sum
 
 
 def init_tramsition():
-    # wd[清] = {'word'= 清 'pinyin' = qing 'count' = 0 'next_dict' = {'华' = 10 '白' =5}} (for example) next_dict = {'华' = 10/15 '白' = 5/15}
-    for key in load.wd:
+    for key in wd:
         sum = 0
-        for word in load.wd[key]['next_dict']:
-            sum += load.wd[key]['next_dict'][word]
-        for word in load.wd[key]['next_dict']:
-            load.wd[key]['next_dict'][word] /= sum
+        for word in wd[key]['next_dict']:
+            sum += wd[key]['next_dict'][word]
+        for word in wd[key]['next_dict']:
+            wd[key]['next_dict'][word] /= sum
 
 
 def transfer(input_path):
     # py [qing] = {'清' = 10 '青' =5}
+    # 实现viterbi算法
     input = open(input_path)  # open the input.txt
     tmp_sentence = []
     for line in input.readlines():
-        tmp_list = []
+        state_list = []
         line = re.sub('\n', '', line)
         tmp = line.split(" ")  # 将每个拼音分开写进list
-        for item in tmp:  # 处理每个拼音
-            tmp_word = max(load.py[item], key=load.py[item].get)
-            tmp_list.append(tmp_word)
-        tmp_sentence.append(tmp_list)
+        for i in range(len(tmp)):  # 处理每个拼音
+            if i == 0:
+                for each_word in py[tmp[i]]:
+                    start_probability = py[tmp[i][each_word]]['start'] * py[
+                        tmp[i]][each_word]['count']
+                    init_state = State(each_word, start_probability)
+                    state_list.append(init_state)
+            for each_word in py[tmp[i]]:
+                for each_state in state_list:
+                    each_state.update_state(each_word)
+
+        tmp_sentence.append(max(state_list, key=lambda x: x.probability))
     return tmp_sentence
 
 
 if __name__ == '__main__':
-    load.load_hanzi_list("D://project//Aiwork/lib/一二级汉字表.txt")
-    train.train("D://project/Aiwork/data_set")
-    load.load_pyhz_list("D://project/Aiwork/lib/拼音汉字表.txt")
+    load_hanzi_list("D://project//Aiwork/lib/一二级汉字表.txt")
+    train("D://project/Aiwork/data_set")
+    load_pyhz_list("D://project/Aiwork/lib/拼音汉字表.txt")
+    init_start()
     init_emission()
     init_tramsition()
     tmp_sentence = transfer("D://project/Aiwork/data/input.txt")
