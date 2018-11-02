@@ -74,16 +74,18 @@ def transfer(input_path):
                     init_state = State(each_word, start_probability)
                     state_list.append(init_state)
             else:
+                new_list = list()
                 for each_word in py[tmp[i]]:
                     for each_state in state_list:
                         if each_word in wd[each_state.sentence[
                                 len(sentence) - 1]]['next_dict']:
-                            new_state_sentence = each_state.sentence + each_word
-                            new_state_probability = each_state.probability * wd[
+                            new_sentence = each_state.sentence + each_word
+                            new_probability = each_state.probability * wd[
                                 each_state.sentence[len(sentence) -
                                                     1]]['next_dict'][each_word]
-                            each_state = State(new_state_sentence,
-                                               new_state_probability)
+                            new_state = State(new_sentence, new_probability)
+                            new_list.__add__(new_state)
+                state_list = new_list
         tmp_sentence.append(max(state_list, key=lambda x: x.probability))
         for item in tmp_sentence:
             print(item)
