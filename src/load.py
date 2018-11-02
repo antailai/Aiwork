@@ -4,10 +4,26 @@ import json
 import os
 import re
 # from xpinyin import Pinyin
-from pypinyin import lazy_pinyin
+from pypinyin import lazy_pinyin, load_single_dict
 
 wd = dict()  # word_list
 py = dict()
+
+load_single_dict({ord('Ö¡'): 'zhen'})
+load_single_dict({ord('àÅ'): 'en'})
+load_single_dict({ord('àÇ'): 'dia'})
+load_single_dict({ord('Üº'): 'xiong'})
+load_single_dict({ord('ÝÏ'): 'zu'})
+load_single_dict({ord('ß¼'): 'fu'})
+load_single_dict({ord('ãÜ'): 'pan'})
+load_single_dict({ord('æÖ'): 'mo'})
+load_single_dict({ord('çñ'): 'heng'})
+load_single_dict({ord('í¹'): 'hua'})
+load_single_dict({ord('íØ'): 'zhou'})
+load_single_dict({ord('ñø'): 'guo'})
+load_single_dict({ord('òÂ'): 'ke'})
+load_single_dict({ord('ôù'): 'chi'})
+load_single_dict({ord('ö±'): 'xian'})
 
 
 def load_pyhz_list(pinyin2hanzi_path):
@@ -57,11 +73,9 @@ def load_dir(path):
 
 
 def load_hanzi_list(hanzi_path):
-    # p = Pinyin()
     file = open(hanzi_path)
     for line in file.readlines():
         for each_word in line:
-            # next_dict = dict()
             resolve_pinyin = []
             if lazy_pinyin(each_word) == ['lve']:
                 resolve_pinyin = 'lue'
@@ -69,32 +83,11 @@ def load_hanzi_list(hanzi_path):
                 resolve_pinyin = 'nue'
             else:
                 resolve_pinyin = ''.join(lazy_pinyin(each_word))
-            if each_word == 'àÅ':
-                tmp_word = {
-                    'word': each_word,
-                    'pinyin': 'en',
-                    'count': 0,
-                    'start_count': 0,
-                    'next_dict': {}
-                }
-            elif each_word == 'àÇ':
-                tmp_word = {
-                    'word': each_word,
-                    'pinyin': 'dia',
-                    'count': 0,
-                    'start_count': 0,
-                    'next_dict': {}
-                }
-            else:
-                tmp_word = {
-                    'word': each_word,
-                    'pinyin': resolve_pinyin,
-                    'count': 0,
-                    'start_count': 0,
-                    'next_dict': {}
-                }
+            tmp_word = {
+                'word': each_word,
+                'pinyin': resolve_pinyin,
+                'count': 0,
+                'start_count': 0,
+                'next_dict': {}
+            }
             wd[each_word] = tmp_word
-
-
-# if __name__ == '__main__':
-#     load_dir("D:/project/Aiwork/data_set")
