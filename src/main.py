@@ -11,15 +11,6 @@ class State:
         self.sentence = sentence
         self.probability = probability
 
-    # def update_state(self, next_word):
-    #     if next_word in wd[self.sentence[len(self.sentence) - 1]]['next_dict']:
-    #         self.sentence.append(next_word)
-    #         self.probability = self.probability * wd[self.sentence[
-    #             len(self.sentence) - 1]]['next_dict'][next_word]
-    #         return True
-    #     else:
-    #         return False
-
 
 def init_start():
     for key in wd:
