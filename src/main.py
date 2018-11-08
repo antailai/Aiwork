@@ -65,7 +65,7 @@ def transfer(input_path):
         state_list = []
         line = re.sub('\n', '', line)
         tmp = line.split(" ")  # 将每个拼音分开写进list
-        for i in range(len(tmp) - 1):  # 处理每个拼音
+        for i in range(len(tmp)):  # 处理每个拼音
             if i == 0:
                 for each_word in py[tmp[i]]:
                     start = py[tmp[i]][each_word]['start']
@@ -78,30 +78,30 @@ def transfer(input_path):
                 for each_word in py[tmp[i]]:
                     for each_state in state_list:
                         if each_word in wd[each_state.sentence[
-                                len(sentence) - 1]]['next_dict']:
+                                len(each_state.sentence) - 1]]['next_dict']:
                             new_sentence = each_state.sentence + each_word
                             new_probability = each_state.probability * wd[
-                                each_state.sentence[len(sentence) -
+                                each_state.sentence[len(each_state.sentence) -
                                                     1]]['next_dict'][each_word]
                             new_state = State(new_sentence, new_probability)
-                            new_list.__add__(new_state)
+                            new_list.append(new_state)
                 state_list = new_list
         tmp_sentence.append(max(state_list, key=lambda x: x.probability))
-        for item in tmp_sentence:
-            print(item)
+        # for item in tmp_sentence:
+        #     print(item)
     return tmp_sentence
 
 
 if __name__ == '__main__':
     load_hanzi_list("D://project//Aiwork/lib/一二级汉字表.txt")
     load_hanzi_list_time = process_time()
-    # print('加载一二级汉字表总共花费了', load_hanzi_list_time, '秒')
+    print('加载一二级汉字表总共花费了', load_hanzi_list_time, '秒')
     train("D://project/Aiwork/data_set")
     train_time = process_time()
     print('加载语料库与统计字频总共花费了', train_time - load_hanzi_list_time, '秒')
     load_pyhz_list("D://project/Aiwork/lib/拼音汉字表.txt")
     load_pyhz_list_time = process_time()
-    # print('加载拼音汉字表总共花费了', load_pyhz_list_time - train_time, '秒')
+    print('加载拼音汉字表总共花费了', load_pyhz_list_time - train_time, '秒')
     init_start()
     start_time = process_time()
     # print('统计start总共花费了', start_time - load_pyhz_list_time, '秒')
@@ -113,7 +113,7 @@ if __name__ == '__main__':
     # print('统计transition总共花费了', transition_time - emission_time, '秒')
     tmp_sentence = transfer("D://project/Aiwork/data/input.txt")
     for sentence in tmp_sentence:
-        print(sentence)
+        print(sentence.sentence)
     # for key in transfer.py:
     #     for word in transfer.py[key]:
     #         print(word, transfer.py[key][word])

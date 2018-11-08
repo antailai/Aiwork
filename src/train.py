@@ -4,7 +4,7 @@
 '''
 import load
 import jieba
-import time
+import re
 
 # import pypinyin
 
@@ -43,8 +43,10 @@ def train(data_set_path):
         #             item[i] = ''.join(item[i][0])
         # for item in tmp_pinyin:
         #     print(item)
-        cut_text = cut(text[i])
-        cut_text = list(filter(lambda x: isChinese(x), cut_text))
+        # cut_text = cut(text[i])
+        # cut_text = list(filter(lambda x: isChinese(x), cut_text))
+        cut_text = re.sub(r'[^\u4e00-\u9fa5]', ' ', text[i])
+        cut_text = cut_text.split(' ')
         for item in cut_text:
             # if isChinese(item):
             for o in range(len(item)):
@@ -65,13 +67,3 @@ def train(data_set_path):
                         load.wd[tmp_word]['count'] += 1
                     else:
                         continue
-    # end_time = time.time()
-    # print('totalcost', end_time - start_time)
-
-
-# if __name__ == '__main__':
-#     load.load_hanzi_list("D:/project/Aiwork/lib/一二级汉字表.txt")
-#     train("D:/project/Aiwork/data_set")
-# for key in load.wd:
-#     if load.wd[key]['count'] != 0:
-#         print(key, load.wd[key])
